@@ -8,6 +8,7 @@ dependencies = [
     "django>=5.2.5",
     "django-environ>=0.12.0",
     "django-filter>=25.1",
+    "django-import-export>=4.3.9",
     "django-s3-sqlite>=0.0.5",
     "django-s3-storage>=0.15.0",
     "django-storages[s3]>=1.14.6",

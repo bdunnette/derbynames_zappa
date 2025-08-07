@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
+    "import_export",
     "derbynames.names",  # Ensure this matches the app name in apps.py
 ]
 
