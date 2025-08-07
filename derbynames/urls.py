@@ -16,8 +16,46 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers, serializers, viewsets
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+from derbynames.names.models import DerbyName
+
+
+# Serializers define the API representation.
+class DerbyNameSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = DerbyName
+        fields = ["id", "name"]
+
+
+# ViewSets define the view behavior.
+class DerbyNameViewSet(viewsets.ModelViewSet):
+    queryset = DerbyName.objects.all()
+    serializer_class = DerbyNameSerializer
+
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r"names", DerbyNameViewSet)
 
 urlpatterns = [
+    path("api/", include(router.urls)),
     path("admin/", admin.site.urls),
+    path("api-auth/", include("rest_framework.urls")),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "api/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
+    ),
 ]

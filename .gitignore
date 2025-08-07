@@ -11,3 +11,12 @@ wheels/
 
 # Django
 *.sqlite3*
+staticfiles/
+media/
+.env
+
+# Deployment files
+derbynames*.zip
+
+# Ruff
+.ruff_cache/

@@ -11,16 +11,27 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import logging
 from pathlib import Path
 import environ
 
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
+# Check if running in AWS Lambda
+if os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+    logger.info("Running in AWS Lambda environment.")
+else:
+    logger.info("Running in local development environment.")
 # Initialize environment variables
 env = environ.Env()
-# Set the default value for the S3 bucket name if not set
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,6 +55,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",  # Required for S3 storage
+    "django_s3_storage",
+    "django_s3_sqlite",
+    "rest_framework",
+    "drf_spectacular",
+    "derbynames.names",  # Ensure this matches the app name in apps.py
 ]
 
 MIDDLEWARE = [
@@ -75,13 +92,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "derbynames.wsgi.application"
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+S3_BUCKET_NAME = env.str("S3_BUCKET_NAME", default="zappa-eno360kab")
+AWS_S3_CUSTOM_DOMAIN = f"{S3_BUCKET_NAME}.s3.amazonaws.com"
+# STATICFILES_STORAGE = "django_s3_storage.storage.StaticS3Storage"
+STATICFILES_STORAGE = "storages.backends.s3.S3Storage"
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # If running in AWS Lambda, use django-s3-sqlite
 if os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
-    INSTALLED_APPS.append("django_s3_sqlite")
     ALLOWED_HOSTS.append(
         env.str(
             "AWS_LAMBDA_HOST", default="l0in7ydxu7.execute-api.us-east-1.amazonaws.com"
@@ -90,7 +112,7 @@ if os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
     DATABASES = {
         "default": {
             "ENGINE": "django_s3_sqlite",
-            "BUCKET": env.str("S3_BUCKET_NAME", default="zappa-eno360kab"),
+            "BUCKET": S3_BUCKET_NAME,
             "NAME": "db.sqlite3",
         }
     }
@@ -144,3 +166,45 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": S3_BUCKET_NAME,
+            "key": env.str("AWS_ACCESS_KEY_ID"),
+            "secret": env.str("AWS_SECRET_ACCESS_KEY"),
+            "custom_domain": AWS_S3_CUSTOM_DOMAIN,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3StaticStorage",
+        "OPTIONS": {
+            "bucket_name": S3_BUCKET_NAME,
+            "custom_domain": AWS_S3_CUSTOM_DOMAIN,
+        },
+    },
+    "mediafiles": {
+        "BACKEND": "storages.backends.s3.S3MediaStorage",
+        "OPTIONS": {
+            "bucket_name": S3_BUCKET_NAME,
+            "custom_domain": AWS_S3_CUSTOM_DOMAIN,
+        },
+    },
+}
+
+REST_FRAMEWORK = {
+    # YOUR SETTINGS
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Your Project API",
+    "DESCRIPTION": "Your project description",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # OTHER SETTINGS
+}
