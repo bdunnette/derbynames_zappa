@@ -17,7 +17,8 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers, serializers, viewsets, permissions
+from rest_framework.response import Response
 from rest_framework.authtoken import views as token_views
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -25,6 +26,11 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 from derbynames.names.models import DerbyName
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logger.info("Setting up URL configuration for derbynames project.")
 
 
 # Serializers define the API representation.
@@ -40,9 +46,27 @@ class DerbyNameViewSet(viewsets.ModelViewSet):
     serializer_class = DerbyNameSerializer
 
 
+# RandomDerbyName returns a random DerbyName.
+class RandomDerbyNameView(viewsets.ModelViewSet):
+    def get_queryset(self):
+        return DerbyName.objects.order_by("?")[:1]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    # Override the default permission to allow unauthenticated access
+    permission_classes = [permissions.AllowAny]
+    # Use the same serializer as DerbyNameViewSet
+    serializer_class = DerbyNameSerializer
+
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r"names", DerbyNameViewSet)
+router.register(r"random-name", RandomDerbyNameView, basename="random-name")
+
 
 urlpatterns = [
     path("api/", include(router.urls)),
