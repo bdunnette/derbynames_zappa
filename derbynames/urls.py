@@ -62,10 +62,44 @@ class RandomDerbyNameView(viewsets.ModelViewSet):
     serializer_class = DerbyNameSerializer
 
 
+class NameStartWithView(viewsets.ModelViewSet):
+    serializer_class = DerbyNameSerializer
+
+    def get_queryset(self):
+        start_letter = self.kwargs.get("start_letter", "").lower()
+        if start_letter:
+            return DerbyName.objects.filter(name__istartswith=start_letter)
+        return DerbyName.objects.none()
+
+    # Override the default permission to allow unauthenticated access
+    permission_classes = [permissions.AllowAny]
+
+
+class NameContainsView(viewsets.ModelViewSet):
+    serializer_class = DerbyNameSerializer
+
+    def get_queryset(self):
+        substring = self.kwargs.get("substring", "").lower()
+        if substring:
+            return DerbyName.objects.filter(name__icontains=substring)
+        return DerbyName.objects.none()
+
+    # Override the default permission to allow unauthenticated access
+    permission_classes = [permissions.AllowAny]
+
+
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r"names", DerbyNameViewSet)
 router.register(r"random-name", RandomDerbyNameView, basename="random-name")
+router.register(
+    r"starts-with/(?P<start_letter>[a-zA-Z])",
+    NameStartWithView,
+    basename="name-start-with",
+)
+router.register(
+    r"contains/(?P<substring>.+)", NameContainsView, basename="name-contains"
+)
 
 
 urlpatterns = [
