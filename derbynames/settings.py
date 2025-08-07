@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "django_s3_storage",
     "django_s3_sqlite",
     "rest_framework",
+    "rest_framework.authtoken",
     "drf_spectacular",
     "derbynames.names",  # Ensure this matches the app name in apps.py
 ]

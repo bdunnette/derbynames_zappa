@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers, serializers, viewsets
+from rest_framework.authtoken import views as token_views
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -47,6 +48,7 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
+    path("api-token-auth/", token_views.obtain_auth_token),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/schema/swagger-ui/",
