@@ -49,11 +49,11 @@ class DerbyNameViewSet(viewsets.ModelViewSet):
 # RandomDerbyName returns a random DerbyName.
 class RandomDerbyNameView(viewsets.ModelViewSet):
     def get_queryset(self):
-        return DerbyName.objects.order_by("?")[:1]
+        return DerbyName.objects.order_by("?").first()
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = self.get_serializer(queryset, many=False)
         return Response(serializer.data)
 
     # Override the default permission to allow unauthenticated access
