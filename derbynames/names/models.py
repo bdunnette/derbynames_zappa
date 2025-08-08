@@ -3,6 +3,7 @@ from pathlib import Path
 from django.db import models
 from django.conf import settings
 from django.core.files.images import ImageFile
+from django.dispatch import receiver
 from huggingface_hub import InferenceClient
 from zappa.asynchronous import task
 import tempfile
@@ -88,22 +89,14 @@ class DerbyJersey(models.Model):
             return self.metadata.get(key, default)
         return default
 
-    # If no image is provided, generate one using huggingface
-    def save(self, *args, **kwargs):
-        # Check if image generation has already been attempted
-        image_generation_attempted = self.get_metadata(
-            "image_generation_attempted", False
-        )
-        if not self.image and not image_generation_attempted:
-            # generate_jersey_image(self.id)
-            logger.info(
-                f"No jersey image found for {self.name}. Generating one using Hugging Face..."
-            )
-            task = generate_jersey_image(self.id)
-            logger.info(f"Image generation task initiated for {self.name} - {task}")
-        super().save(*args, **kwargs)
-
     class Meta:
         verbose_name = "Derby Jersey"
         verbose_name_plural = "Derby Jerseys"
         ordering = ["name"]
+
+
+@receiver(models.signals.post_save, sender=DerbyJersey)
+def generate_jersey_image_on_save(sender, instance, created, **kwargs):
+    if created:
+        logger.info(f"New jersey created: {instance.name}")
+        generate_jersey_image(instance.id)

@@ -26,7 +26,7 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 from derbynames.names.models import DerbyName
-from derbynames.names.views import index, detail
+from derbynames.names.views import index, detail, jersey_grid
 import logging
 
 # Set up logging
@@ -106,6 +106,7 @@ router.register(
 urlpatterns = [
     path("", index, name="index"),
     path("names/<int:name_id>/", detail, name="name-detail"),
+    path("jerseys/", jersey_grid, name="jersey-grid"),
     path("api/", include(router.urls)),
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),

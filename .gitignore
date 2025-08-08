@@ -23,4 +23,5 @@ derbynames*.zip
 
 # Zappa
 derbynames*.zip
-handler_venv/
+derbynames*.gz
+handler_*

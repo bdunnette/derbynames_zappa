@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Q
 from import_export.admin import ImportExportMixin
 from .models import DerbyName, DerbyJersey
 
@@ -17,21 +18,20 @@ class HasImageFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         return (
-            ("Yes", "Yes"),
-            ("No", "No"),
+            ("yes", "Yes"),
+            ("no", "No"),
         )
 
     def queryset(self, request, queryset):
-        if self.value() == "Yes":
-            return queryset.filter(image__isnull=False)
-        elif self.value() == "No":
-            return queryset.filter(image__isnull=True)
-        return queryset
+        if self.value() == "yes":
+            return queryset.filter(Q(image__isnull=False) & ~Q(image__exact=""))
+        elif self.value() == "no":
+            return queryset.filter(Q(image__isnull=True) | Q(image__exact=""))
 
 
 @admin.register(DerbyJersey)
 class DerbyJerseyAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ("name", "created_at", "updated_at")
-    list_filter = ("created_at", "updated_at", HasImageFilter)
+    list_filter = (HasImageFilter,)
     search_fields = ("name",)
     ordering = ("name",)

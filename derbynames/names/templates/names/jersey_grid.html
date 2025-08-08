@@ -1,0 +1,23 @@
+{% extends "names/base.html" %}
+
+{% block title %}Jerseys{% endblock %}
+
+{% block content %}
+<h1>Jerseys</h1>
+<div class="row">
+    {% for jersey in jerseys %}
+    {% if jersey.image %}
+    <div class="col-md-4">
+        <div class="card">
+            <img class="card-img" src="{{ jersey.image.url }}" alt="{{ jersey.metadata.prompt }}">
+            <div class="card-body">
+                <a href="{% url 'name-detail' jersey.name.id %}">
+                    <h2 class="card-title">{{ jersey.name }}</h2>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
