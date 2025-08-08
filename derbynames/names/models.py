@@ -1,4 +1,5 @@
 from logging import getLogger
+from pathlib import Path
 from django.db import models
 from django.conf import settings
 from django.core.files.images import ImageFile
@@ -47,14 +48,14 @@ class DerbyJersey(models.Model):
             logger.info(f"Prompt for image generation: {prompt}")
             try:
                 client = InferenceClient(provider="auto", token=settings.HF_TOKEN)
-                temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+                temp_file = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
                 generated_image = client.text_to_image(
                     prompt,
                     model="black-forest-labs/FLUX.1-schnell",
                 )
                 generated_image.save(temp_file.name)
-                with open(temp_file.name, "rb") as img_file:
-                    self.image = ImageFile(img_file, name=f"jersey_{self.name}.png")
+                # Save the image to the model's image field
+                self.image = ImageFile(temp_file, name=f"jersey_{self.name}.png")
                 # Add prompt to metadata
                 if not self.metadata:
                     self.metadata = {"prompt": prompt}
@@ -65,6 +66,14 @@ class DerbyJersey(models.Model):
                 )
             except Exception as e:
                 logger.error(f"Error generating image for {self.name}: {e}")
+            finally:
+                if temp_file is not None:
+                    temp_path = Path(temp_file.name)
+                    if temp_path.exists():
+                        logger.info(
+                            f"Temporary file at {temp_path} exists - deleting..."
+                        )
+                        temp_path.unlink()
         super().save(*args, **kwargs)
 
     class Meta:
