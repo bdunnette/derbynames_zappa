@@ -4,5 +4,9 @@
 
 {% block content %}
 <h1>{{ name }}</h1>
-<p>Details about the derby name go here.</p>
+{% if jersey.image %}
+<img src="{{ jersey.image.url }}" alt="{{ jersey.metadata.prompt }}">
+{% else %}
+<p>No jersey available for this name.</p>
+{% endif %}
 {% endblock %}
