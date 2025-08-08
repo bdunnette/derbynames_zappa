@@ -53,7 +53,8 @@ class DerbyJersey(models.Model):
                     model="black-forest-labs/FLUX.1-schnell",
                 )
                 generated_image.save(temp_file.name)
-                self.image = ImageFile(temp_file, name=f"jersey_{self.name}.png")
+                with open(temp_file.name, "rb") as img_file:
+                    self.image = ImageFile(img_file, name=f"jersey_{self.name}.png")
                 # Add prompt to metadata
                 if not self.metadata:
                     self.metadata = {"prompt": prompt}
