@@ -25,7 +25,7 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-from derbynames.names.models import DerbyName
+from derbynames.names.models import DerbyName, DerbyJersey
 from derbynames.names.views import index, detail, jersey_grid
 import logging
 
@@ -41,10 +41,21 @@ class DerbyNameSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "name"]
 
 
+class DerbyJerseySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = DerbyJersey
+        fields = ["id", "name", "image"]
+
+
 # ViewSets define the view behavior.
 class DerbyNameViewSet(viewsets.ModelViewSet):
     queryset = DerbyName.objects.all()
     serializer_class = DerbyNameSerializer
+
+
+class DerbyJerseyViewSet(viewsets.ModelViewSet):
+    queryset = DerbyJersey.objects.all()
+    serializer_class = DerbyJerseySerializer
 
 
 # RandomDerbyName returns a random DerbyName.
@@ -92,6 +103,7 @@ class NameContainsView(viewsets.ModelViewSet):
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r"names", DerbyNameViewSet)
+router.register(r"jerseys", DerbyJerseyViewSet)
 router.register(r"random-name", RandomDerbyNameView, basename="random-name")
 router.register(
     r"starts-with/(?P<start_letter>[a-zA-Z])",
