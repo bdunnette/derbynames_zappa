@@ -18,3 +18,10 @@ def detail(request, name_id):
     jersey = DerbyJersey.objects.filter(name=name).first()
     logger.info(f"Rendering detail for name: {name.name}")
     return render(request, "names/detail.html", {"name": name, "jersey": jersey})
+
+
+def jersey_grid(request):
+    jerseys = DerbyJersey.objects.order_by("?").all()[:9]  # Get 9 random DerbyJerseys
+    logger.info(f"Rendering jersey grid with {len(jerseys)} jerseys.")
+    logger.debug(f"Jerseys: {[jersey.name for jersey in jerseys]}")
+    return render(request, "names/jersey_grid.html", {"jerseys": jerseys})
