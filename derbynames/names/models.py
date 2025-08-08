@@ -5,6 +5,7 @@ class DerbyName(models.Model):
     name = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    metadata = models.JSONField(blank=True, null=True)
 
     def __str__(self):
         return self.name
