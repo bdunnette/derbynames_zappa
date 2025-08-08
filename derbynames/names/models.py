@@ -67,10 +67,11 @@ class DerbyJersey(models.Model):
             except Exception as e:
                 logger.error(f"Error generating image for {self.name}: {e}")
             finally:
-                temp_path = Path(temp_file.name)
-                if temp_path.exists():
-                    logger.info(f"Temporary file at {temp_path} exists - deleting...")
-                    temp_path.unlink()
+                if temp_file is not None:
+                    temp_path = Path(temp_file.name)
+                    if temp_path.exists():
+                        logger.info(f"Temporary file at {temp_path} exists - deleting...")
+                        temp_path.unlink()
         super().save(*args, **kwargs)
 
     class Meta:
