@@ -41,6 +41,7 @@ class DerbyJersey(models.Model):
         if self.metadata and self.metadata.get("image_generation_attempted"):
             image_generation_attempted = True
         if not self.image and not image_generation_attempted:
+            # generate_jersey_image(self.id)
             logger.info(
                 f"No jersey image found for {self.name}. Generating one using Hugging Face..."
             )
