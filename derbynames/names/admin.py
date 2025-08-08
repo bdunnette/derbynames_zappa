@@ -35,7 +35,6 @@ class HasImageFilter(admin.SimpleListFilter):
             return queryset.filter(image__isnull=True)
 
 
-
 @admin.register(DerbyJersey)
 class DerbyJerseyAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ("name", "created_at", "updated_at")
