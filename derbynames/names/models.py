@@ -35,7 +35,11 @@ class DerbyJersey(models.Model):
 
     # If no image is provided, generate one using huggingface
     def save(self, *args, **kwargs):
-        if not self.image:
+        # Check if image generation has already been attempted
+        image_generation_attempted = False
+        if self.metadata and self.metadata.get("image_generation_attempted"):
+            image_generation_attempted = True
+        if not self.image and not image_generation_attempted:
             logger.info(
                 f"No jersey image found for {self.name}. Generating one using Hugging Face..."
             )
