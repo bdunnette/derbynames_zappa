@@ -31,6 +31,8 @@ def generate_jersey_image(jersey_id):
         jersey = DerbyJersey.objects.get(id=jersey_id)
         if jersey.image:
             logger.info(f"Jersey image for {jersey.name} already exists.")
+            jersey.set_metadata("image_generation_attempted", True)
+            jersey.save()
         else:
             prompt = settings.JERSEY_IMAGE_PROMPT.format(name=jersey.name)
             logger.info(f"Prompt for image generation: {prompt}")
