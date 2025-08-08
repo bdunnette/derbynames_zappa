@@ -12,6 +12,7 @@
         "profile_name": "default",
         "project_name": "derbynames",
         "runtime": "python3.12",
+        "architecture": "arm64",
         "s3_bucket": "zappa-eno360kab"
     }
 }

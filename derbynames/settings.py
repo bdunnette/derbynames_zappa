@@ -108,7 +108,7 @@ STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
 if os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
     ALLOWED_HOSTS.append(
         env.str(
-            "AWS_LAMBDA_HOST", default="l0in7ydxu7.execute-api.us-east-1.amazonaws.com"
+            "AWS_LAMBDA_HOST", default="bgso9doyxb.execute-api.us-east-1.amazonaws.com"
         )
     )
     DATABASES = {
@@ -174,8 +174,6 @@ STORAGES = {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
             "bucket_name": S3_BUCKET_NAME,
-            "key": env.str("AWS_ACCESS_KEY_ID"),
-            "secret": env.str("AWS_SECRET_ACCESS_KEY"),
             "custom_domain": AWS_S3_CUSTOM_DOMAIN,
         },
     },
@@ -210,3 +208,9 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     # OTHER SETTINGS
 }
+
+HF_TOKEN = env.str("HF_TOKEN")
+JERSEY_IMAGE_PROMPT = env.str(
+    "JERSEY_IMAGE_PROMPT",
+    default="A colorful roller derby jersey prominently displaying the name {name}",
+)
