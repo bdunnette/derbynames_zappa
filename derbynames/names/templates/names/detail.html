@@ -3,10 +3,14 @@
 {% block title %}{{ name }}{% endblock %}
 
 {% block content %}
-<h1>{{ name }}</h1>
-{% if jersey.image %}
-<img class="img-fluid" src="{{ jersey.image.url }}" alt="{{ jersey.metadata.prompt }}">
+<div class="text-center">
+    <h1>{{ name }}</h1>
+    {% if jersey.image %}
+    <a href="{{ jersey.image.url }}">
+        <img class="img-fluid" src="{{ jersey.image.url }}" alt="{{ jersey.metadata.prompt }}">
+    </a>
+</div>
 {% else %}
-<p>No jersey available for this name.</p>
+<p>No jersey available for this name. 🥹</p>
 {% endif %}
 {% endblock %}

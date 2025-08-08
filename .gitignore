@@ -20,11 +20,8 @@ derbynames*.zip
 
 # Ruff
 .ruff_cache/
-<<<<<<< Updated upstream
-=======
 
 # Zappa
 derbynames*.zip
 derbynames*.gz
 handler_*
->>>>>>> Stashed changes

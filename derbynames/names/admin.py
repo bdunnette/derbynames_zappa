@@ -11,6 +11,7 @@ class DerbyNameAdmin(ImportExportMixin, admin.ModelAdmin):
     ordering = ("name",)
 
 
+# Allow filtering of jerseys based on whether they have an image
 class HasImageFilter(admin.SimpleListFilter):
     title = "Has Image"
     parameter_name = "has_image"
@@ -26,7 +27,13 @@ class HasImageFilter(admin.SimpleListFilter):
             return queryset.filter(Q(image__isnull=False) & ~Q(image__exact=""))
         elif self.value() == "no":
             return queryset.filter(Q(image__isnull=True) | Q(image__exact=""))
-        return queryset
+
+    def queryset(self, request, queryset):
+        if self.value() == "Yes":
+            return queryset.filter(image__isnull=False)
+        elif self.value() == "No":
+            return queryset.filter(image__isnull=True)
+
 
 
 @admin.register(DerbyJersey)
