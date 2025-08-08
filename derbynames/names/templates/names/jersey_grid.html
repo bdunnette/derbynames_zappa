@@ -6,6 +6,7 @@
 <h1>Jerseys</h1>
 <div class="row">
     {% for jersey in jerseys %}
+    {% if jersey.image %}
     <div class="col-md-4">
         <div class="card">
             <img class="card-img" src="{{ jersey.image.url }}" alt="{{ jersey.metadata.prompt }}">
@@ -16,6 +17,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
     {% endfor %}
 </div>
 {% endblock %}

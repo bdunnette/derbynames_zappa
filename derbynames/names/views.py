@@ -21,7 +21,10 @@ def detail(request, name_id):
 
 
 def jersey_grid(request):
-    jerseys = DerbyJersey.objects.order_by("?").all()[:9]  # Get 9 random DerbyJerseys
+    # Select jerseys with images
+    jerseys = (
+        DerbyJersey.objects.filter(image__isnull=False).order_by("?").all()[:9]
+    )  # Get 9 random DerbyJerseys
     logger.info(f"Rendering jersey grid with {len(jerseys)} jerseys.")
     logger.debug(f"Jerseys: {[jersey.name for jersey in jerseys]}")
     return render(request, "names/jersey_grid.html", {"jerseys": jerseys})
