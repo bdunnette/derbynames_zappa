@@ -70,7 +70,7 @@ class DerbyJersey(models.Model):
     name = models.ForeignKey(DerbyName, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    metadata = models.JSONField(blank=True, null=True, default=lambda: {})
+    metadata = models.JSONField(blank=True, null=True, default=dict)
     image = models.ImageField(upload_to="jerseys/", blank=True, null=True)
 
     def __str__(self):
