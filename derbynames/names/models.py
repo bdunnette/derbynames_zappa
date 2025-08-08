@@ -54,11 +54,10 @@ def generate_jersey_image(jersey_id):
             jersey.set_metadata("prompt", prompt)
             jersey.set_metadata("image_generation_attempted", True)
             jersey.save()
-            if temp_file is not None:
-                temp_path = Path(temp_file.name)
-                if temp_path.exists():
-                    logger.info(f"Temporary file at {temp_path} exists - deleting...")
-                    temp_path.unlink()
+            temp_path = Path(temp_file.name)
+            if temp_path.exists():
+                logger.info(f"Temporary file at {temp_path} exists - deleting...")
+                temp_path.unlink()
         return (
             jersey.image.url if jersey.image and hasattr(jersey.image, "url") else None
         )
