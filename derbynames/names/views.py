@@ -1,7 +1,7 @@
 from logging import getLogger
 from django.shortcuts import render
 
-from .models import DerbyName
+from .models import DerbyName, DerbyJersey
 
 logger = getLogger(__name__)
 
@@ -15,5 +15,6 @@ def index(request):
 
 def detail(request, name_id):
     name = DerbyName.objects.get(id=name_id)
+    jersey = DerbyJersey.objects.filter(name=name).first()
     logger.info(f"Rendering detail for name: {name.name}")
-    return render(request, "names/detail.html", {"name": name})
+    return render(request, "names/detail.html", {"name": name, "jersey": jersey})

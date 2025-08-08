@@ -108,7 +108,7 @@ STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
 if os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
     ALLOWED_HOSTS.append(
         env.str(
-            "AWS_LAMBDA_HOST", default="bgso9doyxb.execute-api.us-east-1.amazonaws.com"
+            "AWS_LAMBDA_HOST", default="35tob47rp3.execute-api.us-east-1.amazonaws.com"
         )
     )
     DATABASES = {

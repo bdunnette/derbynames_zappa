@@ -50,6 +50,11 @@ class DerbyJersey(models.Model):
                 )
                 generated_image.save(temp_file.name)
                 self.image = ImageFile(temp_file, name=f"jersey_{self.name}.png")
+                # Add prompt to metadata
+                if not self.metadata:
+                    self.metadata = {"prompt": prompt}
+                else:
+                    self.metadata["prompt"] = prompt
                 logger.info(
                     f"Generated image for {self.name} saved to {temp_file.name}"
                 )
