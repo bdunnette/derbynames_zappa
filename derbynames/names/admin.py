@@ -28,12 +28,6 @@ class HasImageFilter(admin.SimpleListFilter):
         elif self.value() == "no":
             return queryset.filter(Q(image__isnull=True) | Q(image__exact=""))
 
-    def queryset(self, request, queryset):
-        if self.value() == "Yes":
-            return queryset.filter(image__isnull=False)
-        elif self.value() == "No":
-            return queryset.filter(image__isnull=True)
-
 
 @admin.register(DerbyJersey)
 class DerbyJerseyAdmin(ImportExportMixin, admin.ModelAdmin):
