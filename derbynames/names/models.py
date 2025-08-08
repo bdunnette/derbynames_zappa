@@ -59,7 +59,7 @@ def generate_jersey_image(jersey_id):
                 if temp_path.exists():
                     logger.info(f"Temporary file at {temp_path} exists - deleting...")
                     temp_path.unlink()
-        return jersey.image.url
+        return jersey.image.url if jersey.image and hasattr(jersey.image, "url") else None
     except Exception as e:
         logger.error(f"Error generating jersey image: {e}")
         return None
