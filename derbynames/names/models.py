@@ -70,7 +70,9 @@ class DerbyJersey(models.Model):
                 if temp_file is not None:
                     temp_path = Path(temp_file.name)
                     if temp_path.exists():
-                        logger.info(f"Temporary file at {temp_path} exists - deleting...")
+                        logger.info(
+                            f"Temporary file at {temp_path} exists - deleting..."
+                        )
                         temp_path.unlink()
         super().save(*args, **kwargs)
 
