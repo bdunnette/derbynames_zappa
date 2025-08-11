@@ -12,5 +12,38 @@
 </div>
 {% else %}
 <p>No jersey available for this name. 🥹</p>
+{% if user.is_authenticated %}
+<p>
+    <script>
+        // Set up API URLs
+        // API URL is current request URL with "/names/" and record ID removed
+        const currentUrl = window.location.href;
+        console.log(currentUrl);
+        const apiUrl = currentUrl.replace(/names\/\d+/, 'api');
+        console.log(apiUrl);
+        const jerseyUrl = apiUrl + 'jerseys/';
+        const nameUrl = apiUrl + 'names/' + "{{ name.id }}" + '/';
+        console.log(nameUrl);
+        function createJersey() {
+            console.log('Creating jersey for name:', nameUrl);
+            payload = JSON.stringify({
+                name: nameUrl
+            })
+            console.log(payload);
+            fetch(jerseyUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: payload
+            })
+                .then(response => response.json())
+                .then(data => console.log(data));
+        }
+    </script>
+    <a class="btn btn-primary" onclick="createJersey()">Create Jersey</a>
+</p>
+{% endif %}
 {% endif %}
 {% endblock %}

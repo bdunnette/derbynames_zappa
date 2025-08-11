@@ -38,7 +38,7 @@ logger.info("Setting up URL configuration for derbynames project.")
 class DerbyNameSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DerbyName
-        fields = ["id", "name"]
+        fields = ["id", "name", "metadata"]
 
 
 class DerbyJerseySerializer(serializers.HyperlinkedModelSerializer):

@@ -49,7 +49,7 @@ def generate_jersey_image(jersey_id):
             generated_image.save(temp_file.name)
             logger.info(f"Image saved to temporary file: {temp_file.name}")
             # Save the image to the model's image field
-            jersey.image = ImageFile(temp_file, name=f"jersey_{jersey.name}.png")
+            jersey.image = ImageFile(temp_file, name=f"jersey_{jersey.id}.png")
             logger.info(f"Image for {jersey.name} saved to model: {jersey.image.url}")
             # Add prompt to metadata
             logger.info(f"Saving jersey {jersey.name} with generated image.")
