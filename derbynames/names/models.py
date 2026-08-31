@@ -1,12 +1,13 @@
+import tempfile
 from logging import getLogger
 from pathlib import Path
-from django.db import models
+
 from django.conf import settings
 from django.core.files.images import ImageFile
+from django.db import models
 from django.dispatch import receiver
 from huggingface_hub import InferenceClient
 from zappa.asynchronous import task
-import tempfile
 
 logger = getLogger(__name__)
 

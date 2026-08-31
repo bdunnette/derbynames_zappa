@@ -1,8 +1,9 @@
 from logging import getLogger
-from django.shortcuts import render
-from django.db.models import Q
 
-from .models import DerbyName, DerbyJersey
+from django.db.models import Q
+from django.shortcuts import render
+
+from .models import DerbyJersey, DerbyName
 
 logger = getLogger(__name__)
 
