@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.db.models import Q
 from import_export.admin import ImportExportMixin
-from .models import DerbyName, DerbyJersey
+
+from .models import DerbyJersey, DerbyName
 
 
 @admin.register(DerbyName)
