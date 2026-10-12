@@ -15,19 +15,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+import logging
+
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework import routers, serializers, viewsets, permissions
-from rest_framework.response import Response
-from rest_framework.authtoken import views as token_views
+from django.urls import include, path
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from rest_framework import permissions, routers, serializers, viewsets
+from rest_framework.authtoken import views as token_views
+from rest_framework.response import Response
+
 from derbynames.names.models import DerbyName
-from derbynames.names.views import index, detail, jersey_grid
-import logging
+from derbynames.names.views import detail, index, jersey_grid
 
 # Set up logging
 logger = logging.getLogger(__name__)
